@@ -9,13 +9,6 @@ import Data.Identity
 import Data.Tuple
 import Prelude
 
-foreign import doS :: forall eff. String -> Array String -> Eff eff (Tuple String (Array String))
-
-sm :: forall eff . String -> StateT (Array String) (Eff eff ) String
-sm x = StateT $ doS x
-
-mod s = map (\x -> x <> " stateMonad") s
-
 
 fn :: forall eff. String -> StateT (Array String) (Eff (console :: CONSOLE | eff)) Unit
 fn x = do
