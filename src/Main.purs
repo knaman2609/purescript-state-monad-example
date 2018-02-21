@@ -1,6 +1,7 @@
 module Main where
 
 import Control.Monad.Eff
+import Control.Monad.Eff.Class
 import Control.Monad.Eff.Console
 import Control.Monad.State.Trans
 import Data.Array
@@ -16,12 +17,14 @@ sm x = StateT $ doS x
 mod s = map (\x -> x <> " stateMonad") s
 
 
+fn :: forall eff. String -> StateT (Array String) (Eff (console :: CONSOLE | eff)) Unit
 fn x = do
-  _ <- sm x
+  put [x]
   newState <- get
-  put ["hi"]
-  modify mod
+  liftEff $ logShow newState
+  modify (\s -> append s ["bar"])
 
 main = do
   Tuple a s <- runStateT (fn "init") []
   logShow s
+  pure unit
